@@ -21,12 +21,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.springboot.web.springBootDemo.model.TaskToDo;
 
 import com.example.springboot.web.springBootDemo.service.TaskToDoRepository;
+import com.example.springboot.web.springBootDemo.service.TasksToDoProducer;
 
 @Controller
 public class TaskToDoController {
 	
 	@Autowired
 	TaskToDoRepository repository;
+	
+	@Autowired
+	TasksToDoProducer tasksToDoProducer;
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
@@ -87,6 +91,7 @@ public class TaskToDoController {
 		}
 		todo.setUserName(getLoggedInUserName(model));
 		repository.save(todo);
+		tasksToDoProducer.sendMessage(todo.toString());
 		return "redirect:/list-tasks";
 	}
 
